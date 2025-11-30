@@ -1,0 +1,57 @@
+graph TD
+    subgraph "Dev Environment"
+        Dev["Developer"]
+        Repo["Git Monorepo"]
+    end
+
+    subgraph "Kind Cluster (my-platform)"
+        subgraph "Ingress Layer"
+            Ingress["Nginx Ingress Controller"]
+        end
+
+        subgraph "Namespace: infra"
+            Argo["ArgoCD"]
+            Registry["Local Registry (registry:2)"]
+            RegUI["Registry UI"]
+        end
+
+        subgraph "Namespace: monitoring"
+            Prometheus["Prometheus"]
+            Grafana["Grafana"]
+        end
+
+        subgraph "Namespace: platform"
+            WebUI["Web Dashboard"]
+            Gateway["API Gateway"]
+        end
+
+        subgraph "Namespace: user-apps"
+            SvcA["Service A (Python)"]
+            SvcB["Service B (Go)"]
+        end
+    end
+
+    %% Workflow
+    Dev -->|1. Push Code| Repo
+    Dev -->|2. Build & Push Image| Registry
+    Dev -->|3. View UI| Ingress
+
+    %% GitOps
+    Argo -->|Sync| Repo
+    Argo -->|Deploy| Registry
+    Argo -->|Deploy| Prometheus
+    Argo -->|Deploy| WebUI
+    Argo -->|Deploy| SvcA
+
+    %% Traffic Flow
+    Ingress -->|host: registry.local| RegUI
+    Ingress -->|host: dashboard.local| WebUI
+    Ingress -->|host: api.local| Gateway
+    Ingress -->|host: grafana.local| Grafana
+
+    %% Internal
+    WebUI --> Gateway
+    Gateway --> SvcA
+    Gateway --> SvcB
+    Prometheus -->|Scrape| SvcA
+    Prometheus -->|Scrape| SvcB
