@@ -5,7 +5,6 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
-      - --rootpath=/argocd
 
     service:
       type: ClusterIP
