@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd_local
+  name: argocd-local
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/MehaGami/my-platform.git
     targetRevision: 0.1.0
-    path: cluster/charts/argocd
+    path: charts/argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
