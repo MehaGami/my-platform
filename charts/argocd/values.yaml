@@ -16,11 +16,14 @@ argo-cd:
       annotations:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/use-regex: "true"
         nginx.ingress.kubernetes.io/rewrite-target: /$2
       hosts:
         - my-platform.local
       paths:
-        - /argocd(/|$)(.*)
+        - /argocd(/|$)(.)
+      pathType: ImplementationSpecific
+      https: false
 
   repoServer:
     replicas: 1
