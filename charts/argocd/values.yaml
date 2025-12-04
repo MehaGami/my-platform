@@ -7,11 +7,9 @@ argo-cd:
     extraArgs:
       - --insecure
 
-    # For local access
+    # For local access (using port-forward)
     service:
-      type: NodePort
-      nodePortHttp: 30080
-      nodePortHttps: 30443
+      type: ClusterIP
 
     ingress:
       enabled: false
