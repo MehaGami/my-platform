@@ -20,7 +20,7 @@ argo-cd:
       hosts:
         - my-platform.local
       paths:
-        - /argocd(/|$)(.)
+        - /argocd(/|$)(.*)
       pathType: ImplementationSpecific
       https: false
 
