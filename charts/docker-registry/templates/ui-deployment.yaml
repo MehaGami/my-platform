@@ -26,11 +26,15 @@ spec:
           protocol: TCP
         env:
         - name: REGISTRY_URL
-          value: "http://{{ .Chart.Name }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.registry.service.port }}"
+          value: "http://docker-registry.docker-registry.svc.cluster.local:5000"
         - name: DELETE_IMAGES
           value: "true"
         - name: REGISTRY_TITLE
           value: "My Platform Docker Registry"
+        - name: NGINX_PROXY_PASS_URL
+          value: "http://docker-registry.docker-registry.svc.cluster.local:5000"
+        - name: SINGLE_REGISTRY
+          value: "true"
         livenessProbe:
           httpGet:
             path: /

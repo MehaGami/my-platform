@@ -9,7 +9,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: {{ .Values.ui.ingress.className }}
   rules:
@@ -17,7 +16,7 @@ spec:
     http:
       paths:
       - path: {{ .Values.ui.ingress.path }}(/|$)(.*)
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: {{ .Chart.Name }}-ui
