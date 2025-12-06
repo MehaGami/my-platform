@@ -1,57 +1,61 @@
-graph TD
-    subgraph "Dev Environment"
-        Dev["Developer"]
-        Repo["Git Monorepo"]
+graph TB
+    subgraph "Development"
+        Dev["👨‍💻 Developer"]
+        SvcRepo["📦 Service Repo<br/>(GitHub)"]
+        DeployRepo["🗂️ Deployment Repo<br/>(my-platform)"]
     end
 
-    subgraph "Kind Cluster (my-platform)"
-        subgraph "Ingress Layer"
-            Ingress["Nginx Ingress Controller"]
+    subgraph "Kind Cluster - my-platform.local"
+        subgraph "Infrastructure"
+            Ingress["🌐 NGINX Ingress<br/>Port 80/443"]
+            Argo["🔄 ArgoCD<br/>GitOps Controller"]
+            Registry["📦 Docker Registry<br/>localhost:5000"]
+            RegUI["🖥️ Registry UI"]
+            Runner["⚙️ GitHub Runner<br/>CI/CD Worker"]
         end
 
-        subgraph "Namespace: infra"
-            Argo["ArgoCD"]
-            Registry["Local Registry (registry:2)"]
-            RegUI["Registry UI"]
-        end
-
-        subgraph "Namespace: monitoring"
-            Prometheus["Prometheus"]
-            Grafana["Grafana"]
-        end
-
-        subgraph "Namespace: platform"
-            WebUI["Web Dashboard"]
-            Gateway["API Gateway"]
-        end
-
-        subgraph "Namespace: user-apps"
-            SvcA["Service A (Python)"]
-            SvcB["Service B (Go)"]
+        subgraph "Services"
+            Svc1["🚀 Service 1"]
+            Svc2["🚀 Service 2"]
         end
     end
 
-    %% Workflow
-    Dev -->|1. Push Code| Repo
-    Dev -->|2. Build & Push Image| Registry
-    Dev -->|3. View UI| Ingress
+    %% Development Flow
+    Dev -->|"1. Write Code"| SvcRepo
+    SvcRepo -->|"2. Push to main"| Runner
+    
+    %% CI/CD Pipeline
+    Runner -->|"3. Build Image"| Runner
+    Runner -->|"4. Push Image"| Registry
+    Runner -->|"5. Update Tag"| DeployRepo
+    
+    %% GitOps Flow
+    DeployRepo -->|"6. Watch Changes"| Argo
+    Argo -->|"7. Sync Apps"| Svc1
+    Argo -->|"7. Sync Apps"| Svc2
+    
+    %% Image Pull
+    Registry -.->|"8. Pull Image"| Svc1
+    Registry -.->|"8. Pull Image"| Svc2
+    
+    %% Ingress Routes
+    Ingress -->|"/argocd"| Argo
+    Ingress -->|"/registry-ui"| RegUI
+    Ingress -->|"/service1"| Svc1
+    Ingress -->|"/service2"| Svc2
+    
+    %% Registry UI Connection
+    RegUI -.->|"Browse"| Registry
+    
+    %% User Access
+    Dev -->|"ArgoCD UI"| Ingress
+    Dev -->|"Registry UI"| Ingress
 
-    %% GitOps
-    Argo -->|Sync| Repo
-    Argo -->|Deploy| Registry
-    Argo -->|Deploy| Prometheus
-    Argo -->|Deploy| WebUI
-    Argo -->|Deploy| SvcA
-
-    %% Traffic Flow
-    Ingress -->|host: registry.local| RegUI
-    Ingress -->|host: dashboard.local| WebUI
-    Ingress -->|host: api.local| Gateway
-    Ingress -->|host: grafana.local| Grafana
-
-    %% Internal
-    WebUI --> Gateway
-    Gateway --> SvcA
-    Gateway --> SvcB
-    Prometheus -->|Scrape| SvcA
-    Prometheus -->|Scrape| SvcB
+    %% Styling
+    classDef infrastructure fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef services fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class Ingress,Argo,Registry,RegUI,Runner infrastructure
+    class Svc1,Svc2 services
+    class Dev,SvcRepo,DeployRepo external
