@@ -1,0 +1,26 @@
+{{- if and .Values.ui.enabled .Values.ui.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-ui
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: {{ .Values.ui.ingress.className }}
+  rules:
+  - host: {{ .Values.ui.ingress.host }}
+    http:
+      paths:
+      - path: {{ .Values.ui.ingress.path }}(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Chart.Name }}-ui
+            port:
+              number: {{ .Values.ui.service.port }}
+{{- end }}

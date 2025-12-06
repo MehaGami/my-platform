@@ -1,0 +1,38 @@
+registry:
+  enabled: true
+  image:
+    repository: registry
+    tag: "2.8.3"
+    pullPolicy: IfNotPresent
+
+  replicas: 1
+
+  service:
+    type: ClusterIP
+    port: 5000
+
+  storage:
+    persistence:
+      enabled: true
+      size: 10Gi
+      storageClass: standard
+
+  ingress:
+    enabled: false
+
+ui:
+  enabled: true
+  image:
+    repository: joxit/docker-registry-ui
+    tag: "2.5.7"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: true
+    className: nginx
+    host: my-platform.local
+    path: /registry-ui

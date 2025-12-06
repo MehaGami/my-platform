@@ -1,61 +1,74 @@
 graph TB
     subgraph "Development"
         Dev["👨‍💻 Developer"]
-        SvcRepo["📦 Service Repo<br/>(GitHub)"]
-        DeployRepo["🗂️ Deployment Repo<br/>(my-platform)"]
+    end
+
+    subgraph "GitHub Repositories"
+        SvcRepo["📦 Service Repo<br/>my-service-1<br/>(Application Code)"]
+        Platform["🏗️ my-platform<br/>(Infrastructure)"]
+        BaseChart["📋 basechart<br/>(Generic Helm)"]
+        Deploy["🗂️ my-deployments<br/>(Service Configs)"]
     end
 
     subgraph "Kind Cluster - my-platform.local"
         subgraph "Infrastructure"
             Ingress["🌐 NGINX Ingress<br/>Port 80/443"]
-            Argo["🔄 ArgoCD<br/>GitOps Controller"]
+            Argo["🔄 ArgoCD<br/>GitOps Engine"]
             Registry["📦 Docker Registry<br/>localhost:5000"]
             RegUI["🖥️ Registry UI"]
             Runner["⚙️ GitHub Runner<br/>CI/CD Worker"]
         end
 
         subgraph "Services"
-            Svc1["🚀 Service 1"]
-            Svc2["🚀 Service 2"]
+            Svc1["🚀 my-service-1"]
+            Svc2["🚀 my-service-2"]
         end
     end
 
     %% Development Flow
-    Dev -->|"1. Write Code"| SvcRepo
-    SvcRepo -->|"2. Push to main"| Runner
+    Dev -->|"1. git push<br/>new code"| SvcRepo
+    SvcRepo -->|"2. trigger<br/>workflow"| Runner
     
     %% CI/CD Pipeline
-    Runner -->|"3. Build Image"| Runner
-    Runner -->|"4. Push Image"| Registry
-    Runner -->|"5. Update Tag"| DeployRepo
+    Runner -->|"3. build<br/>image"| Runner
+    Runner -->|"4. push<br/>image"| Registry
+    Runner -->|"5. update<br/>image.tag"| Deploy
     
     %% GitOps Flow
-    DeployRepo -->|"6. Watch Changes"| Argo
-    Argo -->|"7. Sync Apps"| Svc1
-    Argo -->|"7. Sync Apps"| Svc2
+    Deploy -->|"6. watch<br/>changes"| Argo
+    Argo -->|"7. fetch<br/>chart"| BaseChart
+    Argo -->|"8. apply<br/>manifests"| Svc1
+    Argo -->|"8. apply<br/>manifests"| Svc2
     
     %% Image Pull
-    Registry -.->|"8. Pull Image"| Svc1
-    Registry -.->|"8. Pull Image"| Svc2
+    Registry -.->|"9. pull<br/>image"| Svc1
+    Registry -.->|"9. pull<br/>image"| Svc2
     
     %% Ingress Routes
     Ingress -->|"/argocd"| Argo
     Ingress -->|"/registry-ui"| RegUI
-    Ingress -->|"/service1"| Svc1
-    Ingress -->|"/service2"| Svc2
+    Ingress -->|"/my-service-1"| Svc1
+    Ingress -->|"/my-service-2"| Svc2
     
     %% Registry UI Connection
-    RegUI -.->|"Browse"| Registry
+    RegUI -.->|"browse"| Registry
+    
+    %% Infrastructure Management
+    Platform -.->|"defines"| Argo
+    Platform -.->|"defines"| Registry
+    Platform -.->|"defines"| Runner
+    Platform -.->|"defines"| Ingress
     
     %% User Access
-    Dev -->|"ArgoCD UI"| Ingress
-    Dev -->|"Registry UI"| Ingress
+    Dev -->|"view UI"| Ingress
 
     %% Styling
-    classDef infrastructure fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef infra fill:#e1f5ff,stroke:#01579b,stroke-width:2px
     classDef services fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef external fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef repos fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef person fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     
-    class Ingress,Argo,Registry,RegUI,Runner infrastructure
+    class Ingress,Argo,Registry,RegUI,Runner infra
     class Svc1,Svc2 services
-    class Dev,SvcRepo,DeployRepo external
+    class SvcRepo,Platform,BaseChart,Deploy repos
+    class Dev person
