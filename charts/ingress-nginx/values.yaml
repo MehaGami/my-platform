@@ -2,6 +2,7 @@ ingress-nginx:
   controller:
     service:
       type: NodePort
+    allowSnippetAnnotations: true
 
     hostPort:
       enabled: true
