@@ -5,6 +5,7 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
+      - --basehref=/argocd
       - --rootpath=/argocd
 
     service:
@@ -16,12 +17,11 @@ argo-cd:
       annotations:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
       hosts:
         - my-platform.local
       paths:
-        - /argocd(/|$)(.*)
-      pathType: ImplementationSpecific
+        - /argocd
+      pathType: Prefix
       https: false
 
   repoServer:
