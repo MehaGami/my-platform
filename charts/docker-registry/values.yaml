@@ -34,5 +34,5 @@ ui:
   ingress:
     enabled: true
     className: nginx
-    host: my-platform.local
-    path: /registry-ui
+    host: registry.my-platform.local
+    path: /
