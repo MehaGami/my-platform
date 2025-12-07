@@ -23,8 +23,8 @@ registry:
 ui:
   enabled: true
   image:
-    repository: joxit/docker-registry-ui
-    tag: "2.5.7"
+    repository: klausmeyer/docker-registry-browser
+    tag: "1.7.0"
     pullPolicy: IfNotPresent
 
   service:

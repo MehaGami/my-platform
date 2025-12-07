@@ -9,10 +9,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^{{ .Values.ui.ingress.path }}/?(.*)$ /$1 break;
-      proxy_set_header X-Forwarded-Prefix {{ .Values.ui.ingress.path }};
-      proxy_set_header X-Script-Name {{ .Values.ui.ingress.path }};
 spec:
   ingressClassName: {{ .Values.ui.ingress.className }}
   rules:
