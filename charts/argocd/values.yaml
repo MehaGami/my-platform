@@ -5,7 +5,6 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
-      - --basehref=/argocd
       - --rootpath=/argocd
 
     service:
