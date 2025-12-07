@@ -2,6 +2,7 @@
 ARGOCD_NAMESPACE ?= argocd
 ARGOCD_VERSION ?= v2.13.0
 DOMAIN ?= my-platform.local
+ENABLE_REGISTRY ?= true
 
 # Install ArgoCD
 argocd_install:
@@ -62,7 +63,11 @@ platform_status:
 # Configure /etc/hosts for local domain
 hosts_configure:
 	@echo "Adding $(DOMAIN) to /etc/hosts..."
-	@grep -q "$(DOMAIN)" /etc/hosts || echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts
-	@echo "Domain configured: $(DOMAIN)"
+	@grep -q "\s$(DOMAIN)$$" /etc/hosts || echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts
+ifeq ($(ENABLE_REGISTRY),true)
+	@echo "Adding registry.$(DOMAIN) to /etc/hosts (ENABLE_REGISTRY=true)..."
+	@grep -q "\sregistry.$(DOMAIN)$$" /etc/hosts || echo "127.0.0.1 registry.$(DOMAIN)" | sudo tee -a /etc/hosts
+endif
+	@echo "Hosts configured."
 
 .PHONY: argocd_install argocd_uninstall argocd_password platform_bootstrap platform_deploy platform_destroy platform_restart platform_status hosts_configure

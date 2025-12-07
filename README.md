@@ -89,7 +89,11 @@ make platform_destroy
 
 ```bash
 # Add my-platform.local to /etc/hosts
+# If ENABLE_REGISTRY=true (default), also adds registry.my-platform.local
 make hosts_configure
+
+# To disable registry domain:
+make hosts_configure ENABLE_REGISTRY=false
 ```
 
 ## Architecture
