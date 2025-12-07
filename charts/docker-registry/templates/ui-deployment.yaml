@@ -31,6 +31,8 @@ spec:
           value: "{{ .Values.ui.ingress.path }}"
         - name: ENABLE_DELETE_IMAGES
           value: "true"
+        - name: SECRET_KEY_BASE
+          value: "change-me-in-production-to-a-random-value-generated-by-openssl-rand-hex-64"
         livenessProbe:
           httpGet:
             path: /
