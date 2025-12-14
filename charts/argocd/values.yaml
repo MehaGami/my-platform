@@ -16,7 +16,6 @@ argo-cd:
       annotations:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        nginx.ingress.kubernetes.io/app-root: /argocd/applications
       hosts:
         - my-platform.local
       paths:
