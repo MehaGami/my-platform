@@ -2,6 +2,10 @@ argo-cd:
   global:
     domain: my-platform.local
 
+  configs:
+    cm:
+      url: "http://my-platform.local/argocd"
+
   server:
     extraArgs:
       - --insecure
@@ -16,12 +20,11 @@ argo-cd:
       annotations:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
       hosts:
         - my-platform.local
       paths:
-        - /argocd(/|$)(.*)
-      pathType: ImplementationSpecific
+        - /argocd
+      pathType: Prefix
       https: false
 
   repoServer:
