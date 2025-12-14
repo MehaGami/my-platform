@@ -5,6 +5,7 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
+      - --rootpath=/argocd
 
     service:
       type: ClusterIP
@@ -15,13 +16,12 @@ argo-cd:
       annotations:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
-        nginx.ingress.kubernetes.io/x-forwarded-prefix: "/argocd"
+        nginx.ingress.kubernetes.io/app-root: /argocd/applications
       hosts:
         - my-platform.local
       paths:
-        - /argocd(/|$)(.*)
-      pathType: ImplementationSpecific
+        - /argocd
+      pathType: Prefix
       https: false
 
   repoServer:
