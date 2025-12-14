@@ -5,11 +5,12 @@ argo-cd:
   configs:
     cm:
       url: "http://my-platform.local/argocd"
+    params:
+      server.insecure: true
+      server.rootpath: /argocd
 
   server:
-    extraArgs:
-      - --insecure
-      - --rootpath=/argocd
+    extraArgs: []
 
     service:
       type: ClusterIP
