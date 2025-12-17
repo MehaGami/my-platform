@@ -4,13 +4,12 @@ argo-cd:
 
   configs:
     cm: {}
-    params:
-      server.insecure: true
-      server.rootpath: /argocd
-      server.basehref: /argocd
 
   server:
-    extraArgs: []
+    extraArgs:
+      - --insecure
+      - --rootpath=/argocd
+      - --basehref=/argocd
 
     service:
       type: ClusterIP
