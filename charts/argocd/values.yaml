@@ -12,7 +12,7 @@ argo-cd:
     extraArgs:
       - --insecure
       - --rootpath=/argocd
-      - --basehref=/argocd/
+      - --basehref=http://my-platform.local/argocd/
 
     service:
       type: ClusterIP
