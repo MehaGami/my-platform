@@ -7,7 +7,6 @@ argo-cd:
       url: "http://my-platform.local/argocd"
     params:
       server.insecure: true
-      server.basehref: /argocd
 
   server:
     extraArgs: []
