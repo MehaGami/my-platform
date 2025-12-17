@@ -3,11 +3,11 @@ argo-cd:
     domain: my-platform.local
 
   configs:
-    cm:
-      url: "http://my-platform.local/argocd"
+    cm: {}
     params:
       server.insecure: true
       server.rootpath: /argocd
+      server.basehref: /argocd
 
   server:
     extraArgs: []
