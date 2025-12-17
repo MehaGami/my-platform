@@ -3,13 +3,16 @@ argo-cd:
     domain: my-platform.local
 
   configs:
-    cm: {}
+    cm:
+      url: "http://my-platform.local/argocd"
+    params:
+      server.enable.gzip: "false"
 
   server:
     extraArgs:
       - --insecure
       - --rootpath=/argocd
-      - --basehref=/argocd
+      - --basehref=/argocd/
 
     service:
       type: ClusterIP
