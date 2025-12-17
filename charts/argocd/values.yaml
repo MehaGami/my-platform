@@ -7,7 +7,7 @@ argo-cd:
       url: "http://my-platform.local/argocd"
     params:
       server.insecure: true
-      server.rootpath: /argocd
+      server.basehref: /argocd
 
   server:
     extraArgs: []
@@ -16,17 +16,7 @@ argo-cd:
       type: ClusterIP
 
     ingress:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-      hosts:
-        - my-platform.local
-      paths:
-        - /argocd
-      pathType: Prefix
-      https: false
+      enabled: false
 
   repoServer:
     replicas: 1
