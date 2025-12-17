@@ -13,9 +13,6 @@ metadata:
     # 2. Rewrite the path passed to the backend to /$2 (effectively stripping /argocd)
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 
-    # Force the prefix header so ArgoCD constructs links correctly
-    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/argocd"
-
 spec:
   ingressClassName: nginx
   rules:
