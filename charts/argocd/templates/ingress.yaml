@@ -7,7 +7,8 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    # Ми прибрали rewrite-target, щоб префікс /argocd передавався в ArgoCD як є
+    nginx.ingress.kubernetes.io/proxy-redirect-from: "http://my-platform.local/"
+    nginx.ingress.kubernetes.io/proxy-redirect-to: "http://my-platform.local/argocd/"
 spec:
   ingressClassName: nginx
   rules:
