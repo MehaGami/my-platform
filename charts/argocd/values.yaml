@@ -6,17 +6,17 @@ argo-cd:
     cm:
       # URL має бути БЕЗ слеша в кінці
       url: "http://my-platform.local/argocd"
-      params:
-        server.insecure: "true"
-      # rootpath каже серверу ігнорувати цей префікс при маршрутизації
-      server.rootpath: "/argocd"
-      # basehref каже браузеру, звідки починати шляхи (додайте слеш в кінці!)
-      server.basehref: "/argocd/"
-      server.enable.gzip: "false"
+    params:
+      - server.insecure: "true"
+      - server.enable.gzip: "false"
 
   server:
     extraArgs:
       - --insecure
+      - --basehref
+      - /argocd
+      - --rootpath
+      - /argocd
 
     service:
       type: ClusterIP
