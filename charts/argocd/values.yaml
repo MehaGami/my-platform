@@ -4,33 +4,37 @@ argo-cd:
 
   configs:
     cm:
+      # URL для зовнішніх посилань (без косої риски в кінці)
       url: "http://my-platform.local/argocd"
     params:
+      server.insecure: "true"
+      # Ці параметри змушують ArgoCD очікувати префікс /argocd
+      server.basehref: "/argocd"
+      server.rootpath: "/argocd"
       server.enable.gzip: "false"
 
   server:
     extraArgs:
       - --insecure
-      - --rootpath=/argocd
-      - --basehref=http://my-platform.local/argocd/
+      - --basehref
+      - /argocd
+      - --rootpath
+      - /argocd
 
     service:
       type: ClusterIP
+      servicePortHttp: 80
 
     ingress:
       enabled: false
 
   repoServer:
     replicas: 1
-
   controller:
     replicas: 1
-
   redis-ha:
     enabled: false
-
   redis:
     enabled: true
-
   notifications:
     enabled: false
