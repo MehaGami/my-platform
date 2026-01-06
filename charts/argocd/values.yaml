@@ -4,16 +4,15 @@ argo-cd:
 
   configs:
     cm:
-      # URL має бути БЕЗ слеша в кінці
-      url: "http://my-platform.local/argocd"
+      url: "http://my-platform.local"
     params:
       server.insecure: "true"
+      server.rootpath: "/argocd"
+      server.basehref: "/argocd"
 
   server:
     extraArgs:
       - --insecure
-      - --rootpath
-      - /argocd
 
     service:
       type: ClusterIP
